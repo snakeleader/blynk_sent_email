@@ -30,6 +30,8 @@ char pass[] = "65c1b841934b";
 #define smtpServerPort        465
 #define emailSubject          "遠程拍攝傳送"
 #define emailRecipient        "snakeleader@gmail.com"
+#define emailRecipient2        "stemcck@hoshun.edu.hk"
+
 
 #define CAMERA_MODEL_AI_THINKER
 
@@ -194,7 +196,7 @@ void sendPhoto( void ) {
   smtpData.setLogin(smtpServer, smtpServerPort, emailSenderAccount, emailSenderPassword);
   
   // Set the sender name and Email
-  smtpData.setSender("遠程拍攝傳送", emailSenderAccount);
+  smtpData.setSender("遠程拍攝傳送機", emailSenderAccount);
   
   // Set Email priority or importance High, Normal, Low or 1 to 5 (1 is highest)
   smtpData.setPriority("High");
@@ -209,7 +211,7 @@ void sendPhoto( void ) {
 
   // Add recipients, can add more than one recipient
   smtpData.addRecipient(emailRecipient);
-  //smtpData.addRecipient(emailRecipient2);
+  smtpData.addRecipient(emailRecipient2);
 
   // Add attach files from SPIFFS
   smtpData.addAttachFile(FILE_PHOTO, "image/jpg");
