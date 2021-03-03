@@ -28,7 +28,7 @@ char pass[] = "65c1b841934b";
 #define emailSenderPassword   "789adfA$89d"
 #define smtpServer            "smtp.gmail.com"
 #define smtpServerPort        465
-#define emailSubject          "ESP32-CAM Photo Captured"
+#define emailSubject          "遠程拍攝傳送"
 #define emailRecipient        "snakeleader@gmail.com"
 
 #define CAMERA_MODEL_AI_THINKER
