@@ -274,7 +274,7 @@ void sendPhoto( void ) {
   // Add attach files from SPIFFS
   smtpData.addAttachFile(FILE_PHOTO, "image/jpg");
   // Set the storage type to attach files in your email (SPIFFS)
-  smtpData.setFileStorageType(MailClientStorageType::SPIFFS);
+  smtpData.setFileStorageType(MailClientStorageType::SPIFFS);   
 
   smtpData.setSendCallback(sendCallback);
   
