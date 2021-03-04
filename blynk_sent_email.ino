@@ -15,12 +15,18 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <BlynkSimpleEsp32.h>
+#include "time.h"
 
 // REPLACE WITH YOUR NETWORK CREDENTIALS
 char auth[] = "7_cg4V46Xsy5LMnLBg-EAYFO1kcmA4dP";
 char server[] = "eddychung.ddns.net";
 char ssid[] = "Xperia XZ Premium_ed82";
 char pass[] = "65c1b841934b";
+char showtime[50];
+
+const char* ntpServer = "pool.ntp.org";
+const long  gmtOffset_sec = 28800;
+const int   daylightOffset_sec = 3600;
 
 // To send Email using Gmail use port 465 (SSL) and SMTP Server smtp.gmail.com
 // YOU MUST ENABLE less secure app option https://myaccount.google.com/lesssecureapps?pli=1
@@ -72,12 +78,57 @@ BLYNK_WRITE(V1)
   sendPhoto();
 }
 
+void printLocalTime(){
+  struct tm timeinfo;
+  if(!getLocalTime(&timeinfo)){
+    Serial.println("Failed to obtain time");
+    return;
+  }
+  //Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
+  
+  //"strftime"-Format time as string
+  //http://www.cplusplus.com/reference/ctime/strftime/
+  strftime(showtime,50, "%A, %B %d %Y %H:%M:%S", &timeinfo);
+  Serial.print("As taken photo time:");
+  Serial.println(showtime);
+
+  /* Serial.print("Day of week: ");
+  Serial.println(&timeinfo, "%A");
+  Serial.print("Month: ");
+  Serial.println(&timeinfo, "%B");
+  Serial.print("Day of Month: ");
+  Serial.println(&timeinfo, "%d");
+  Serial.print("Year: ");
+  Serial.println(&timeinfo, "%Y");
+  Serial.print("Hour: ");
+  Serial.println(&timeinfo, "%H");
+  Serial.print("Hour (12 hour format): ");
+  Serial.println(&timeinfo, "%I");
+  Serial.print("Minute: ");
+  Serial.println(&timeinfo, "%M");
+  Serial.print("Second: ");
+  Serial.println(&timeinfo, "%S");
+
+  Serial.println("Time variables");
+  char timeHour[3];
+  strftime(timeHour,3, "%H", &timeinfo);
+  Serial.println(timeHour);
+  char timeWeekDay[10];
+  strftime(timeWeekDay,10, "%A", &timeinfo);
+  Serial.println(timeWeekDay); */
+  Serial.println();
+
+}
+
 void setup() {
   Serial.begin(115200);
   Blynk.begin(auth, ssid, pass, server, 8080);
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
   Serial.println();
 
+  // Init and get the time
+  configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+  //printLocalTime();
   // Connect to Wi-Fi
   //WiFi.begin(ssid, password);
   //Serial.print("Connecting to WiFi...");
@@ -159,6 +210,10 @@ void capturePhotoSaveSpiffs( void ) {
     Serial.println("Taking a photo...");
 
     fb = esp_camera_fb_get();
+
+    //Call printLocalTime as the photo taken time and record/update it
+    printLocalTime();
+
     if (!fb) {
       Serial.println("Camera capture failed");
       return;
@@ -196,7 +251,7 @@ void sendPhoto( void ) {
   smtpData.setLogin(smtpServer, smtpServerPort, emailSenderAccount, emailSenderPassword);
   
   // Set the sender name and Email
-  smtpData.setSender("遠程拍攝傳送機", emailSenderAccount);
+  smtpData.setSender("遠程拍攝傳送", emailSenderAccount);
   
   // Set Email priority or importance High, Normal, Low or 1 to 5 (1 is highest)
   smtpData.setPriority("High");
@@ -205,7 +260,10 @@ void sendPhoto( void ) {
   smtpData.setSubject(emailSubject);
     
   // Set the email message in HTML format
-  smtpData.setMessage("<h2>遠程拍攝傳送照片</h2>", true);
+  //printLocalTime();
+  String emailMsg = "拍攝時間(香港標準時間)：";
+  emailMsg += showtime;
+  smtpData.setMessage(emailMsg, true);
   // Set the email message in text format
   //smtpData.setMessage("Photo captured with ESP32-CAM and attached in this email.", false);
 
