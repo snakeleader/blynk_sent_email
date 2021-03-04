@@ -15,6 +15,7 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <BlynkSimpleEsp32.h>
+#include <NTPClient.h>
 
 // REPLACE WITH YOUR NETWORK CREDENTIALS
 char auth[] = "7_cg4V46Xsy5LMnLBg-EAYFO1kcmA4dP";
