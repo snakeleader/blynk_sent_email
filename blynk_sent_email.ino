@@ -30,7 +30,7 @@ char pass[] = "65c1b841934b";
 #define smtpServerPort        465
 #define emailSubject          "遠程拍攝傳送"
 #define emailRecipient        "snakeleader@gmail.com"
-#define emailRecipient2        "stemcck@hoshun.edu.hk"
+//#define emailRecipient2        "stemcck@hoshun.edu.hk"
 
 
 #define CAMERA_MODEL_AI_THINKER
@@ -211,7 +211,7 @@ void sendPhoto( void ) {
 
   // Add recipients, can add more than one recipient
   smtpData.addRecipient(emailRecipient);
-  smtpData.addRecipient(emailRecipient2);
+  //smtpData.addRecipient(emailRecipient2);
 
   // Add attach files from SPIFFS
   smtpData.addAttachFile(FILE_PHOTO, "image/jpg");
