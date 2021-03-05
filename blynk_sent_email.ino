@@ -18,25 +18,29 @@
 #include "time.h"
 
 // REPLACE WITH YOUR NETWORK CREDENTIALS
-char auth[] = "7_cg4V46Xsy5LMnLBg-EAYFO1kcmA4dP";
-char server[] = "eddychung.ddns.net";
-char ssid[] = "Xperia XZ Premium_ed82";
-char pass[] = "65c1b841934b";
+char auth[] = "";
+// You can also specify server:
+//Blynk.begin(auth, ssid, pass, "blynk-cloud.com", 80);
+//Blynk.begin(auth, ssid, pass, IPAddress(192,168,1,100), 8080);
+//**Change ↓
+char server[] = "";
+char ssid[] = "";
+char pass[] = "";
+//**Change ↑
 char showtime[50];
 
 const char* ntpServer = "pool.ntp.org";
-const long  gmtOffset_sec = 28800;
+const long  gmtOffset_sec = 28800; //HK time
 const int   daylightOffset_sec = 3600;
 
 // To send Email using Gmail use port 465 (SSL) and SMTP Server smtp.gmail.com
 // YOU MUST ENABLE less secure app option https://myaccount.google.com/lesssecureapps?pli=1
-#define emailSenderAccount    "ukesongs8@gmail.com"
-#define emailSenderPassword   "789adfA$89d"
+#define emailSenderAccount    ""
+#define emailSenderPassword   ""
 #define smtpServer            "smtp.gmail.com"
 #define smtpServerPort        465
 #define emailSubject          "遠程拍攝傳送"
-#define emailRecipient        "snakeleader@gmail.com"
-//#define emailRecipient2        "stemcck@hoshun.edu.hk"
+#define emailRecipient        ""
 
 
 #define CAMERA_MODEL_AI_THINKER
@@ -281,6 +285,7 @@ void sendPhoto( void ) {
   // Start sending Email, can be set callback function to track the status
   if(!MailClient.sendMail(smtpData)){
     Serial.println("Error sending Email, " + MailClient.smtpErrorReason());
+    Blynk.notify("傳送電郵出錯:" + MailClient.smtpErrorReason());
   } else{
     Blynk.notify("已電郵最新照片");
   }
